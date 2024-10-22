@@ -364,11 +364,11 @@ class Tensor:
         else:
             return self.sum(dim) / self.shape[dim]
 
-    def permute(self, dim: Optional[int] = None) -> Tensor:
+    def permute(self, *dim: int) -> Tensor:
         if dim is None:
             return self
         else:
-            return Permute.apply(self, self._ensure_tensor(dim))
+            return Permute.apply(self, tensor(list(dim)))
 
     def view(self, dim: Optional[int] = None) -> Tensor:
         if dim is None:

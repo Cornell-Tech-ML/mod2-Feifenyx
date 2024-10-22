@@ -133,10 +133,11 @@ class Sigmoid(Function):
         return t1.f.sigmoid_map(t1)
 
     @staticmethod
-    def backward(ctx: Context, grad_output: float) -> float:
+    def backward(ctx: Context, grad_output: Tensor) -> float:
         """Computes the gradient of the sigmoid function using the backpropagated derivative."""
         (t1,) = ctx.saved_values
-        return t1.f.mul_zip(t1.f.mul_zip(t1.f.sigmoid_map(t1), (t1.f.add_zip(1, t1.f.neg_map(t1.f.sigmoid_map(t1))))), grad_output)
+        sigmoid_t1 = t1.f.sigmoid_map(t1)
+        return t1.f.mul_zip(t1.f.mul_zip(sigmoid_t1, t1.f.add_zip(tensor([1]), t1.f.neg_map(sigmoid_t1))), grad_output)
 
 
 class ReLU(Function):
@@ -147,7 +148,7 @@ class ReLU(Function):
         return t1.f.relu_map(t1)
 
     @staticmethod
-    def backward(ctx: Context, grad_output: float) -> float:
+    def backward(ctx: Context, grad_output: Tensor) -> float:
         """Computes the gradient of the ReLU function using the backpropagated derivative."""
         (t1,) = ctx.saved_values
         return t1.f.relu_back_zip(t1, grad_output)
@@ -161,7 +162,7 @@ class Log(Function):
         return t1.f.log_map(t1)
 
     @staticmethod
-    def backward(ctx: Context, grad_output: float) -> float:
+    def backward(ctx: Context, grad_output: Tensor) -> float:
         """Computes the gradient of the log function using the backpropagated derivative."""
         (t1,) = ctx.saved_values
         return t1.f.log_back_zip(t1, grad_output)
@@ -175,7 +176,7 @@ class Exp(Function):
         return t1.f.exp_map(t1)
 
     @staticmethod
-    def backward(ctx: Context, grad_output: float) -> float:
+    def backward(ctx: Context, grad_output: Tensor) -> float:
         """Computes the gradient of the exponential function using the backpropagated derivative."""
         (t1,) = ctx.saved_values
         return t1.f.mul_zip(t1.f.exp_map(t1), grad_output)
