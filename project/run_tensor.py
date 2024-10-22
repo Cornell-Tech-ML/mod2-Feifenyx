@@ -32,7 +32,7 @@ class Linear(minitorch.Module):
         self.out_size = out_size
 
     def forward(self, inputs):
-        batch_size, in_size = x.shape
+        batch_size, in_size = inputs.shape
         ret = self.bias.value
         return ret + (inputs.view(batch_size, in_size, 1) * self.weights.value).sum(1).view(batch_size, self.out_size)
 
