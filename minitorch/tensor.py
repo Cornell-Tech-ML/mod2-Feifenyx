@@ -283,5 +283,99 @@ class Tensor:
         """
         return self._tensor.shape
 
-    # Functions
-    # TODO: Implement for Task 2.3.
+    @property
+    def size(self) -> int:
+        """Returns
+        size of the tensor
+
+        """
+        return self._tensor.size
+
+    @property
+    def dims(self) -> int:
+        """Returns
+        dimensions of the tensor
+
+        """
+        return self._tensor.dims
+
+    def __add__(self, t2: TensorLike) -> Tensor:
+        return Add.apply(self, self._ensure_tensor(t2))
+
+    def __sub__(self, t2: TensorLike) -> Tensor:
+        return Add.apply(self, Neg.apply(self._ensure_tensor(t2)))
+
+    def __mul__(self, t2: TensorLike) -> Tensor:
+        return Mul.apply(self, self._ensure_tensor(t2))
+
+    def __lt__(self, t2: TensorLike) -> Tensor:
+        return LT.apply(self, self._ensure_tensor(t2))
+
+    def __eq__(self, t2: TensorLike) -> Tensor:
+        return EQ.apply(self, self._ensure_tensor(t2))
+
+    def __gt__(self, t2: TensorLike) -> Tensor:
+        return LT.apply(self._ensure_tensor(t2), self)
+
+    def __neg__(self) -> Tensor:
+        return Neg.apply(self)
+
+    def __radd__(self, t2: TensorLike) -> Tensor:
+        return self + t2
+
+    def __rmul__(self, t2: TensorLike) -> Tensor:
+        return self * t2
+
+    def all(self, dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return All.apply(self.contiguous().view(self.size), self._ensure_tensor(0))
+        else:
+            return All.apply(self, self._ensure_tensor(dim))
+
+    def is_close(self, t2: Tensor) -> Tensor:
+        """Apply the IsClose operation using IsClose.apply(self)."""
+        return IsClose.apply(self, t2)
+
+    def sigmoid(self) -> Tensor:
+        """Apply the Sigmoid operation using Sigmoid.apply(self)."""
+        return Sigmoid.apply(self)
+
+    def relu(self) -> Tensor:
+        """Apply the ReLU operation using ReLU.apply(self)."""
+        return ReLU.apply(self)
+
+    def log(self) -> Tensor:
+        """Apply the Log operation using Log.apply(self)."""
+        return Log.apply(self)
+
+    def exp(self) -> Tensor:
+        """Apply the Exponential operation using Exp.apply(self)."""
+        return Exp.apply(self)
+
+    def sum(self, dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return Sum.apply(self.contiguous().view(self.size), self._ensure_tensor(0))
+        else:
+            return Sum.apply(self, self._ensure_tensor(dim))
+
+    def mean(self, dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return self.sum() / self.size
+        else:
+            return self.sum(dim) / self.shape[dim]
+
+    def permute(self, dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return self
+        else:
+            return Permute.apply(self, self._ensure_tensor(dim))
+
+    def view(self, dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return self
+        else:
+            return View.apply(self, self._ensure_tensor(dim))
+
+    def zero_grad_(self) -> None:
+        """Reset the derivative on this tensor."""
+        self.grad = None

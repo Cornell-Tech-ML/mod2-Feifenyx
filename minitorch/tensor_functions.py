@@ -231,16 +231,17 @@ class IsClose(Function):
 class Permute(Function):
     @staticmethod
     def forward(ctx: Context, a: Tensor, order: Tensor) -> Tensor:
-        ctx.save_for_backward(a.shape, dim)
-        if dim is not None:
-            return a.f.add_reduce(a, int(dim.item()))
-        else:
-            return a.f.add_reduce(a.contiguous().view(int(operators.prod(a.shape))), 0)
+        ord = order.to_numpy().astype(int).tolist()
+        ctx.save_for_backward(ord)
+        return a._new(a._tensor.permute(*ord))
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
-        a_shape, dim = ctx.saved_values
-        return grad_output, 0.0
+        (order,) = ctx.saved_values
+        inv_order = [0] * len(order)
+        for i in range(len(order)):
+            inv_order[i] = order[order[i]]
+        return grad_output._new(grad_output._tensor.permute(*inv_order)), 0.0
 
 
 class View(Function):

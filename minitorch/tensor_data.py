@@ -105,7 +105,7 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
 
     """
     max_dims = max(len(shape1), len(shape2))
-    broadcasted_shape = []
+    broadcasted_shape = [0] * max_dims
 
     for i in range(1, max_dims+1):
         dim1 = shape1[-i] if len(shape1) >= i else 1
