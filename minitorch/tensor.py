@@ -414,12 +414,12 @@ class Tensor:
         else:
             return Permute.apply(self, tensor(list(dim)))
 
-    def view(self, dim: Optional[int] = None) -> Tensor:
+    def view(self, *dim: int) -> Tensor:
         """Apply the View operation along a given dimension."""
         if dim is None:
             return self
         else:
-            return View.apply(self, self._ensure_tensor(dim))
+            return View.apply(self, tensor(list(dim)))
 
     def zero_grad_(self) -> None:
         """Reset the derivative on this tensor."""
