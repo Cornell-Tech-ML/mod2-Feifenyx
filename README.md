@@ -20,7 +20,7 @@ The files that will be synced are:
 
 ## Simple Dataset
 
-<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/2024/mod2-Simple.png" width="50%">
+<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/master/mod2-Simple.png" width="50%">
 
 ### Hyperparameters
 
@@ -35,7 +35,7 @@ The files that will be synced are:
 
 ## Diag Dataset
 
-<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/2024/mod2-Diag.png" width="50%">
+<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/master/mod2-Diag.png" width="50%">
 
 ### Hyperparameters
 
@@ -50,7 +50,7 @@ The files that will be synced are:
 
 ## Split Dataset
 
-<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/2024/mod2-Split.png" width="50%">
+<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/master/mod2-Split.png" width="50%">
 
 ### Hyperparameters
 
@@ -65,7 +65,7 @@ The files that will be synced are:
 
 ## Xor Dataset
 
-<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/2024/mod2-Xor.png" width="50%">
+<img src="https://github.com/Cornell-Tech-ML/mod2-Feifenyx/blob/master/mod2-Xor.png" width="50%">
 
 ### Hyperparameters
 
