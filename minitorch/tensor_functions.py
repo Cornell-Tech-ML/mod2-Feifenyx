@@ -241,7 +241,7 @@ class Permute(Function):
         (order,) = ctx.saved_values
         inv_order = [0] * len(order)
         for i in range(len(order)):
-            inv_order[i] = order[order[i]]
+            inv_order[order[i]] = i
         return grad_output._new(grad_output._tensor.permute(*inv_order)), 0.0
 
 
