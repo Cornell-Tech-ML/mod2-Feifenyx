@@ -95,9 +95,11 @@ class Tensor:
         self.f = backend
 
     def requires_grad_(self, x: bool) -> None:
+        """Sets whether the tensor requires gradient calculation."""
         self.history = History()
 
     def requires_grad(self) -> bool:
+        """Checks if the tensor requires gradient calculation."""
         return self.history is not None
 
     def to_numpy(self) -> npt.NDArray[np.float64]:
@@ -194,6 +196,8 @@ class Tensor:
         # END CODE CHANGE (2021)
 
     def zeros(self, shape: Optional[UserShape] = None) -> Tensor:
+        """Creates a new tensor filled with zeros, with the same shape as the input tensor or a specified shape."""
+
         def zero(shape: UserShape) -> Tensor:
             return Tensor.make(
                 [0.0] * int(operators.prod(shape)), shape, backend=self.backend
@@ -239,14 +243,42 @@ class Tensor:
         return self.history is not None and self.history.last_fn is None
 
     def is_constant(self) -> bool:
+        """True if this object is a constant value (no `history`)"""
         return self.history is None
 
     @property
     def parents(self) -> Iterable[Variable]:
+        """Retrieves the parent variables of the tensor.
+
+        Returns
+        -------
+            Iterable[Variable]: An iterable of parent variables from the tensor's history.
+
+        Raises
+        ------
+            AssertionError: If the tensor is a constant (has no history).
+
+        """
         assert self.history is not None
         return self.history.inputs
 
     def chain_rule(self, d_output: Any) -> Iterable[Tuple[Variable, Any]]:
+        """Computes the gradients for the parent variables using the chain rule.
+
+        Args:
+        ----
+            d_output: The backpropagated derivative from the right variable.
+
+        Returns:
+        -------
+            Iterable[Tuple[Variable, Any]]: An iterable of tuples where each
+            tuple contains a parent variable and its corresponding gradient.
+
+        Raises:
+        ------
+            AssertionError: If the tensor's history or the last function or context is None.
+
+        """
         h = self.history
         assert h is not None
         assert h.last_fn is not None
@@ -260,6 +292,14 @@ class Tensor:
         ]
 
     def backward(self, grad_output: Optional[Tensor] = None) -> None:
+        """Calls autodiff to fill in the derivatives for the history of this object.
+
+        Args:
+        ----
+            grad_output (number, opt): starting derivative to backpropagate through the model
+                                   (typically left out, and assumed to be tensor([1.0])).
+
+        """
         if grad_output is None:
             assert self.shape == (1,), "Must provide grad_output if non-scalar"
             grad_output = Tensor.make([1.0], (1,), backend=self.backend)
@@ -327,6 +367,7 @@ class Tensor:
         return self * t2
 
     def all(self, dim: Optional[int] = None) -> Tensor:
+        """Apply the All operation along a given dimension."""
         if dim is None:
             return All.apply(self.contiguous().view(self.size), self._ensure_tensor(0))
         else:
@@ -353,24 +394,28 @@ class Tensor:
         return Exp.apply(self)
 
     def sum(self, dim: Optional[int] = None) -> Tensor:
+        """Apply the Sum operation along a given dimension."""
         if dim is None:
             return Sum.apply(self.contiguous().view(self.size), self._ensure_tensor(0))
         else:
             return Sum.apply(self, self._ensure_tensor(dim))
 
     def mean(self, dim: Optional[int] = None) -> Tensor:
+        """Compute the mean of elements in the tensor along a given dimension."""
         if dim is None:
             return self.sum() / self.size
         else:
             return self.sum(dim) / self.shape[dim]
 
     def permute(self, *dim: int) -> Tensor:
+        """Apply the Permute operation along a given dimension."""
         if dim is None:
             return self
         else:
             return Permute.apply(self, tensor(list(dim)))
 
     def view(self, dim: Optional[int] = None) -> Tensor:
+        """Apply the View operation along a given dimension."""
         if dim is None:
             return self
         else:
