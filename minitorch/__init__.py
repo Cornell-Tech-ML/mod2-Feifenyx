@@ -1,3 +1,7 @@
+"""Initializes the package by importing classes and modules from testing, tensor_data, tensor,
+tensor_ops, tensor_function, datasets, optim, module, autodiff, scalar, and scalar_functions submodules.
+"""
+
 from .testing import MathTest, MathTestVariable  # type: ignore # noqa: F401,F403
 from .tensor_data import *  # noqa: F401,F403
 from .tensor import *  # noqa: F401,F403
